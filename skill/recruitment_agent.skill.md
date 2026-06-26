@@ -4,9 +4,30 @@
 
 Recruitment Agent
 
+---
+
 ## Purpose
 
-Automatically process candidate applications received through Gmail, evaluate candidates, and generate recruitment reports.
+The Recruitment Agent is responsible for automatically processing candidate applications received through Gmail.
+
+It evaluates candidates according to predefined business rules, calculates recruitment scores, classifies applicants, removes duplicate candidates, and generates recruitment reports that are used by the remaining modules of the Smart Recruitment Agent system.
+
+---
+
+## Responsibilities
+
+The Recruitment Agent performs the following tasks:
+
+* Connect to Gmail using Google OAuth 2.0.
+* Read candidate application emails.
+* Extract candidate information.
+* Calculate recruitment scores.
+* Classify candidates.
+* Remove duplicate applications.
+* Generate Excel recruitment reports.
+* Generate recruitment summary reports.
+
+---
 
 ## Inputs
 
@@ -14,39 +35,87 @@ Automatically process candidate applications received through Gmail, evaluate ca
 * Candidate application emails
 * Candidate database (Excel)
 
+---
+
 ## Processing Steps
 
-1. Connect to Gmail using OAuth 2.0
-2. Read incoming candidate emails
-3. Extract candidate information
-4. Calculate candidate score
-5. Rank candidates by suitability
-6. Generate Excel reports
+1. Authenticate with Gmail API.
+2. Read unread candidate emails.
+3. Extract candidate information.
+4. Validate candidate data.
+5. Calculate recruitment scores.
+6. Classify recruitment status.
+7. Remove duplicate candidates.
+8. Generate recruitment reports.
+
+---
 
 ## Outputs
 
-* candidate_results.xlsx
+The Recruitment Agent generates:
+
 * gmail_candidates.xlsx
 * gmail_summary.txt
 
+These files are later used by:
+
+* Interview Scheduler
+* Invitation Sender
+* Main Workflow
+
+---
+
 ## Technologies
 
-* Python
+* Python 3.13
 * Gmail API
-* OAuth 2.0
+* Google OAuth 2.0
 * Pandas
 * OpenPyXL
 
+---
+
 ## Success Criteria
 
-* Successful Gmail authentication
-* Email processing completed
-* Candidate ranking generated
-* Excel reports created
+The module is considered successful when it:
+
+* Authenticates successfully with Gmail.
+* Reads candidate applications.
+* Processes all candidates.
+* Calculates recruitment scores.
+* Classifies candidates correctly.
+* Removes duplicate candidates.
+* Generates Excel recruitment reports.
+
+---
+
+## Integration
+
+The Recruitment Agent is fully integrated with:
+
+* Interview Scheduler
+* Invitation Sender
+* Main Workflow Manager
+
+It represents the first processing stage of the complete recruitment workflow.
+
+---
 
 ## Future Enhancements
 
-* AI-based candidate scoring
-* Interview scheduling integration
-* Power BI dashboard integration
-* Automated recruitment recommendations
+Potential future improvements include:
+
+* AI-powered CV parsing.
+* Machine Learning candidate evaluation.
+* LinkedIn API integration.
+* Power BI recruitment dashboard.
+* Candidate recommendation engine.
+* Cloud deployment.
+
+---
+
+## Status
+
+**Status:** ✅ Completed
+
+The Recruitment Agent has been fully implemented, tested, documented, and integrated into the Smart Recruitment Agent recruitment workflow.
