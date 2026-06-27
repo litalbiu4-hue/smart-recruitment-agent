@@ -10,7 +10,7 @@
 
 The Smart Recruitment Agent is an end-to-end recruitment automation system developed to streamline and automate the candidate recruitment process.
 
-The system simulates candidate applications, processes incoming Gmail messages, evaluates applicants according to predefined business rules, schedules interviews in Google Calendar, sends interview invitation emails, and generates recruitment reports.
+The system simulates candidate applications, processes incoming Gmail messages, evaluates applicants according to predefined business rules, schedules interviews in Google Calendar with conflict detection, sends interview invitation emails, and generates recruitment reports.
 
 The project demonstrates workflow automation through the integration of multiple Google services and Python-based business logic.
 
@@ -43,9 +43,15 @@ The system aims to:
 * Evaluate and rank candidates.
 * Classify recruitment status.
 * Schedule interviews automatically.
+* Check calendar availability before scheduling.
+* Detect calendar conflicts before scheduling interviews.
+* Send automatic conflict notification emails to affected candidates.
+* Schedule interviews at least 7 days in advance.
+* Skip weekends (Friday and Saturday) when scheduling.
 * Create Google Calendar interview events.
 * Send interview invitation emails automatically.
 * Generate Excel recruitment reports.
+* Sync invitation status to both Excel reports.
 * Prevent duplicate interviews.
 * Prevent duplicate invitation emails.
 * Execute the complete recruitment workflow through a single application.
@@ -69,9 +75,15 @@ The system shall:
 ### Interview Management
 
 * Select High Priority candidates.
+* Check calendar availability before scheduling.
+* Detect and handle calendar conflicts.
+* Send conflict notification emails to affected candidates.
+* Schedule interviews at least 7 days in advance.
+* Skip Friday and Saturday when scheduling.
 * Schedule interviews automatically.
 * Create Google Calendar events.
 * Record interview information.
+* Prevent duplicate interview scheduling.
 
 ---
 
@@ -81,6 +93,7 @@ The system shall:
 * Update invitation status.
 * Record invitation dates.
 * Prevent duplicate invitations.
+* Sync invitation status to both Excel reports.
 
 ---
 
@@ -103,8 +116,7 @@ The system shall provide:
 * Complete workflow execution.
 * Required file validation.
 * Runtime error handling.
-
----
+* ---
 
 ## Inputs
 
@@ -124,6 +136,7 @@ The system generates:
 * Recruitment summary
 * Google Calendar events
 * Interview invitation emails
+* Conflict notification emails
 * Excel recruitment reports
 
 ---
@@ -149,14 +162,19 @@ The project is considered successful when it can:
 * Process Gmail applications automatically.
 * Evaluate and classify candidates.
 * Generate recruitment reports.
+* Check calendar availability before scheduling interviews.
+* Detect calendar conflicts automatically.
+* Send conflict notification emails to affected candidates.
+* Schedule interviews at least 7 days in advance.
+* Skip weekends when scheduling interviews.
 * Schedule interviews automatically.
 * Create Google Calendar events.
 * Send interview invitations automatically.
+* Sync invitation status across both Excel reports.
 * Prevent duplicate interview scheduling.
 * Prevent duplicate invitation emails.
 * Execute the complete workflow successfully through the Main application.
-
----
+* ---
 
 ## Final Deliverables
 
@@ -164,11 +182,15 @@ The completed project includes:
 
 * Recruitment Agent
 * Fake Mail Generator
-* Interview Scheduler
-* Invitation Sender
+* Interview Scheduler with Calendar Conflict Detection
+* Invitation Sender with Dual Excel Sync
 * Main Workflow Manager
 * Gmail Integration
 * Google Calendar Integration
+* Calendar Conflict Detection
+* Conflict Notification Emails
+* Weekend-Aware Scheduling
+* 7-Day Advance Scheduling
 * Excel Reporting
 * Complete Project Documentation
 
@@ -180,4 +202,4 @@ The completed project includes:
 
 The Smart Recruitment Agent project has been fully implemented, tested, documented, and published.
 
-The final solution provides a complete recruitment automation workflow from candidate application generation through interview invitation delivery.
+The final solution provides a complete recruitment automation workflow from candidate application generation through interview invitation delivery, including calendar conflict detection, automatic conflict notifications, weekend-aware scheduling, and synchronized Excel reporting.
