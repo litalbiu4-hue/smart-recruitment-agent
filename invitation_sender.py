@@ -1,4 +1,5 @@
 import base64
+import os
 
 import pandas as pd
 
@@ -36,8 +37,11 @@ gmail_service = build(
 # =====================================
 
 df = pd.read_excel(
-    "gmail_candidates.xlsx"
+    "gmail_candidates.xlsx",
+    dtype=str
 )
+
+df = df.fillna("")
 
 # =====================================
 # CREATE REQUIRED COLUMNS
@@ -79,52 +83,31 @@ error_count = 0
 for index, row in df.iterrows():
 
     calendar_status = str(
-        row.get(
-            "Calendar_Status",
-            ""
-        )
+        df.at[index, "Calendar_Status"]
     ).strip()
 
     invitation_status = str(
-        row.get(
-            "Invitation_Status",
-            ""
-        )
+        df.at[index, "Invitation_Status"]
     ).strip()
 
     candidate_name = str(
-        row.get(
-            "Candidate_Name",
-            ""
-        )
+        df.at[index, "Candidate_Name"]
     )
 
     candidate_email = str(
-        row.get(
-            "Email",
-            ""
-        )
+        df.at[index, "Email"]
     )
 
     position = str(
-        row.get(
-            "Position",
-            ""
-        )
+        df.at[index, "Position"]
     )
 
     interview_date = str(
-        row.get(
-            "Interview_Date",
-            ""
-        )
+        df.at[index, "Interview_Date"]
     )
 
     interview_time = str(
-        row.get(
-            "Interview_Time",
-            ""
-        )
+        df.at[index, "Interview_Time"]
     )
 
     # =====================================
@@ -182,6 +165,7 @@ HR Department
     raw_message = base64.urlsafe_b64encode(
         message.as_bytes()
     ).decode()
+
     try:
 
         gmail_service.users().messages().send(
@@ -223,15 +207,57 @@ HR Department
         )
 
         print(e)
-
 # =====================================
-# SAVE UPDATED EXCEL
+# SAVE UPDATED GMAIL CANDIDATES
 # =====================================
 
 df.to_excel(
     "gmail_candidates.xlsx",
     index=False
 )
+
+# =====================================
+# SYNC INVITATION STATUS TO
+# INTERVIEW CANDIDATES FILE
+# =====================================
+
+if os.path.exists("interview_candidates.xlsx"):
+
+    df_interview = pd.read_excel(
+        "interview_candidates.xlsx",
+        dtype=str
+    )
+
+    df_interview = df_interview.fillna("")
+
+    if "Invitation_Status" not in df_interview.columns:
+        df_interview["Invitation_Status"] = ""
+
+    if "Invitation_Sent_Date" not in df_interview.columns:
+        df_interview["Invitation_Sent_Date"] = ""
+
+    for idx, irow in df_interview.iterrows():
+
+        email = str(irow.get("Email", "")).strip()
+
+        match = df[df["Email"].str.strip() == email]
+
+        if not match.empty:
+
+            df_interview.at[
+                idx,
+                "Invitation_Status"
+            ] = match.iloc[0]["Invitation_Status"]
+
+            df_interview.at[
+                idx,
+                "Invitation_Sent_Date"
+            ] = match.iloc[0]["Invitation_Sent_Date"]
+
+    df_interview.to_excel(
+        "interview_candidates.xlsx",
+        index=False
+    )
 
 # =====================================
 # PRINT SUMMARY
@@ -252,6 +278,7 @@ print(
     f"Invitations Sent: "
     f"{sent_count}"
 )
+
 print(
     f"Skipped Invitations: "
     f"{skipped_count}"
@@ -264,11 +291,17 @@ print(
 
 print()
 
-print("Updated File")
+print("Updated Files")
 
 print(
     "- gmail_candidates.xlsx"
 )
+
+if os.path.exists("interview_candidates.xlsx"):
+
+    print(
+        "- interview_candidates.xlsx"
+    )
 
 print()
 
