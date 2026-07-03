@@ -113,7 +113,7 @@ fake_mail_generator.py recruitment_agent.py
                                │
                                ▼
                   interview_scheduler.py
-                  (Calendar Conflict Detection)
+                (Calendar Availability Validation & Smart Scheduling)
                                │
                                ▼
                   invitation_sender.py
@@ -520,7 +520,7 @@ Recruitment Agent
         │
         ▼
 Interview Scheduler
-(Calendar Conflict Detection)
+(Calendar Availability Validation & Smart Scheduling)
         │
         ▼
 Invitation Sender
@@ -1072,7 +1072,7 @@ The following screenshots are available in the **screenshots** folder:
 
 ## Author
 
-**Lital Edani**
+**Lital Edni**
 
 Bar-Ilan University
 
