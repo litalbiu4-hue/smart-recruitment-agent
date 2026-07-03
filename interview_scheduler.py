@@ -58,7 +58,6 @@ for col in required_columns:
     if col not in df.columns:
         df[col] = ""
 
-    # Prevent pandas dtype errors
     df[col] = (
         df[col]
         .fillna("")
@@ -67,7 +66,6 @@ for col in required_columns:
 
 # =====================================
 # SELECT CANDIDATES
-# KEEP ORIGINAL LOGIC
 # =====================================
 
 interview_candidates = df[
@@ -84,21 +82,16 @@ print(
 # =====================================
 
 total_candidates = len(df)
-
 eligible_candidates = len(interview_candidates)
-
 created_count = 0
-
 skipped_count = 0
-
 conflict_count = 0
-
 pending_count = 0
 
 # =====================================
 # START TIME
 # AT LEAST 7 DAYS FROM NOW
-# SKIP FRIDAY (4) AND SATURDAY (5)
+# SKIP FRIDAY AND SATURDAY
 # =====================================
 
 next_week = datetime.now() + timedelta(days=7)
@@ -115,15 +108,13 @@ while next_week.weekday() in (4, 5):
 
 start_time = next_week
 
-# TEMP DEBUG - REMOVE AFTER TESTING
 print(f"First interview slot: {start_time.strftime('%Y-%m-%d %H:%M %A')}")
 
 saved_rows = []
-
 event_links = []
 
 # =====================================
-# SKIP WEEKENDS FUNCTION
+# NEXT WORKING SLOT FUNCTION
 # =====================================
 
 def next_working_slot(current_time):
@@ -131,7 +122,6 @@ def next_working_slot(current_time):
     next_slot = current_time + timedelta(minutes=30)
 
     if next_slot.hour >= 17:
-
         next_slot = next_slot.replace(
             hour=9,
             minute=0,
@@ -143,6 +133,26 @@ def next_working_slot(current_time):
         next_slot += timedelta(days=1)
 
     return next_slot
+
+
+# =====================================
+# FIND AVAILABLE SLOT FOR CANDIDATE
+# =====================================
+
+def find_available_slot(from_time):
+
+    candidate_slot = from_time
+
+    for _ in range(20):
+
+        end_slot = candidate_slot + timedelta(minutes=30)
+
+        if is_time_slot_available(candidate_slot, end_slot):
+            return candidate_slot
+
+        candidate_slot = next_working_slot(candidate_slot)
+
+    return None
 
 
 # =====================================
@@ -196,9 +206,7 @@ HR Department
 """
 
     message = MIMEText(body)
-
     message["To"] = candidate_email
-
     message["Subject"] = subject
 
     raw_message = base64.urlsafe_b64encode(
@@ -212,18 +220,11 @@ HR Department
             body={"raw": raw_message}
         ).execute()
 
-        print(
-            f"Conflict email sent to "
-            f"{candidate_name}"
-        )
+        print(f"Conflict email sent to {candidate_name}")
 
     except Exception as e:
 
-        print(
-            f"Error sending conflict email "
-            f"to {candidate_name}"
-        )
-
+        print(f"Error sending conflict email to {candidate_name}")
         print(e)
 # =====================================
 # CREATE INTERVIEWS
@@ -275,12 +276,10 @@ for index, row in interview_candidates.iterrows():
 
         continue
 
-    end_time = start_time + timedelta(
-        minutes=30
-    )
+    end_time = start_time + timedelta(minutes=30)
 
     # =====================================
-    # CHECK AVAILABILITY
+    # CHECK AVAILABILITY OF CURRENT SLOT
     # =====================================
 
     slot_available = is_time_slot_available(
@@ -290,49 +289,53 @@ for index, row in interview_candidates.iterrows():
 
     if not slot_available:
 
-        conflict_count += 1
-
-        candidate_name = str(
-            row.get("Candidate_Name", "")
+        # Try to find next available slot
+        available_slot = find_available_slot(
+            next_working_slot(start_time)
         )
 
-        candidate_email = str(
-            row.get("Email", "")
-        )
+        if available_slot is None:
 
-        position = str(
-            row.get("Position", "")
-        )
+            # No slot found — send conflict email
+            conflict_count += 1
 
-        print(
-            f"Calendar conflict for "
-            f"{candidate_name} "
-            f"at {start_time.strftime('%Y-%m-%d %H:%M')}"
-        )
+            candidate_name = str(row.get("Candidate_Name", ""))
+            candidate_email = str(row.get("Email", ""))
+            position = str(row.get("Position", ""))
 
-        send_conflict_email(
-            candidate_name,
-            candidate_email,
-            position
-        )
+            print(
+                f"No available slot for "
+                f"{candidate_name}"
+            )
 
-        df.at[index, "Calendar_Status"] = "Conflict"
-        df.at[index, "Interview_Date"] = ""
-        df.at[index, "Interview_Time"] = ""
-        df.at[index, "Calendar_Event"] = ""
+            send_conflict_email(
+                candidate_name,
+                candidate_email,
+                position
+            )
 
-        row["Calendar_Status"] = "Conflict"
-        row["Interview_Date"] = ""
-        row["Interview_Time"] = ""
-        row["Calendar_Event"] = ""
+            df.at[index, "Calendar_Status"] = "Conflict"
+            df.at[index, "Interview_Date"] = ""
+            df.at[index, "Interview_Time"] = ""
+            df.at[index, "Calendar_Event"] = ""
 
-        saved_rows.append(row)
+            row["Calendar_Status"] = "Conflict"
+            row["Interview_Date"] = ""
+            row["Interview_Time"] = ""
+            row["Calendar_Event"] = ""
 
-        event_links.append("")
+            saved_rows.append(row)
+            event_links.append("")
 
-        start_time = next_working_slot(start_time)
+            start_time = next_working_slot(start_time)
 
-        continue
+            continue
+
+        else:
+
+            # Use the next available slot
+            start_time = available_slot
+            end_time = start_time + timedelta(minutes=30)
 
     event = {
 
@@ -344,79 +347,43 @@ for index, row in interview_candidates.iterrows():
             f"Score: {row['Score']}",
 
         "start": {
-
-            "dateTime":
-                start_time.isoformat(),
-
-            "timeZone":
-                "Asia/Jerusalem"
-
+            "dateTime": start_time.isoformat(),
+            "timeZone": "Asia/Jerusalem"
         },
 
         "end": {
-
-            "dateTime":
-                end_time.isoformat(),
-
-            "timeZone":
-                "Asia/Jerusalem"
-
+            "dateTime": end_time.isoformat(),
+            "timeZone": "Asia/Jerusalem"
         }
 
     }
 
     created_event = calendar_service.events().insert(
-
         calendarId="primary",
-
         body=event
-
     ).execute()
 
     created_count += 1
 
     event_link = created_event["htmlLink"]
 
-    interview_date = start_time.strftime(
-        "%Y-%m-%d"
-    )
-
-    interview_time = start_time.strftime(
-        "%H:%M"
-    )
-
-    # =====================================
-    # UPDATE ORIGINAL DATAFRAME
-    # =====================================
+    interview_date = start_time.strftime("%Y-%m-%d")
+    interview_time = start_time.strftime("%H:%M")
 
     df.at[index, "Interview_Date"] = interview_date
-
     df.at[index, "Interview_Time"] = interview_time
-
     df.at[index, "Calendar_Status"] = "Scheduled"
-
     df.at[index, "Calendar_Event"] = event_link
 
-    # =====================================
-    # UPDATE COPY FOR OUTPUT FILE
-    # =====================================
-
     row["Interview_Date"] = interview_date
-
     row["Interview_Time"] = interview_time
-
     row["Calendar_Status"] = "Scheduled"
-
     row["Calendar_Event"] = event_link
 
     saved_rows.append(row)
-
     event_links.append(event_link)
 
-    print(
-        f"Interview created for "
-        f"{row['Candidate_Name']}"
-    )
+    print(f"Interview created for {row['Candidate_Name']}")
 
     start_time = next_working_slot(start_time)
 
@@ -426,9 +393,7 @@ for index, row in interview_candidates.iterrows():
 
 if len(saved_rows) > 0:
 
-    interview_candidates = pd.DataFrame(
-        saved_rows
-    )
+    interview_candidates = pd.DataFrame(saved_rows)
 
     interview_candidates = interview_candidates.sort_values(
         by="Score",
@@ -478,44 +443,15 @@ print("\n========================")
 print("PROCESS COMPLETED")
 print("========================")
 
-print(
-    f"Total Candidates: "
-    f"{total_candidates}"
-)
-
-print(
-    f"Eligible Candidates: "
-    f"{eligible_candidates}"
-)
-
-print(
-    f"Interviews Created: "
-    f"{created_count}"
-)
-
-print(
-    f"Skipped Candidates: "
-    f"{skipped_count}"
-)
-
-print(
-    f"Calendar Conflicts: "
-    f"{conflict_count}"
-)
-
-print(
-    f"Pending Candidates: "
-    f"{pending_count}"
-)
+print(f"Total Candidates: {total_candidates}")
+print(f"Eligible Candidates: {eligible_candidates}")
+print(f"Interviews Created: {created_count}")
+print(f"Skipped Candidates: {skipped_count}")
+print(f"Calendar Conflicts: {conflict_count}")
+print(f"Pending Candidates: {pending_count}")
 
 print()
 
 print("Files Created / Updated")
-
-print(
-    "- gmail_candidates.xlsx"
-)
-
-print(
-    "- interview_candidates.xlsx"
-)
+print("- gmail_candidates.xlsx")
+print("- interview_candidates.xlsx")
