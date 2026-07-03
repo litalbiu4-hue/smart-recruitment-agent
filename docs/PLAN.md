@@ -131,7 +131,6 @@ The project was implemented in several development phases, beginning with enviro
 * TODO completed.
 * GitHub repository updated.
 * Final project documentation prepared.
-* ---
 
 ## Phase 9 – Bonus: Calendar Conflict Detection ✅ Completed
 
