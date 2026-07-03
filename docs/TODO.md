@@ -57,6 +57,7 @@ The Smart Recruitment Agent project has been successfully designed, implemented,
 - [x] Classify recruitment status
 - [x] Remove duplicate candidates
 - [x] Generate recruitment reports
+
 ---
 
 ### Interview Management
@@ -106,7 +107,8 @@ The Smart Recruitment Agent project has been successfully designed, implemented,
 - [x] Implement centralized runtime error handling
 - [x] Support Demo Mode
 - [x] Support Full Recruitment Workflow Mode
- ---
+ 
+---
 
 ### Bonus – Calendar Availability Validation & Smart Scheduling
 
@@ -148,7 +150,8 @@ The Smart Recruitment Agent project has been successfully designed, implemented,
 - [x] Automatic notification email testing
 - [x] Invitation sender testing
 - [x] End-to-end workflow testing
- ---
+
+---
 
 ### Documentation
 
