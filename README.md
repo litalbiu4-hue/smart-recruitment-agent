@@ -157,7 +157,6 @@ Each module can run independently or as part of the complete workflow managed by
 * Microsoft Excel
 * Visual Studio Code
 * PowerShell
-* ---
 
 ## Key Project Capabilities
 
@@ -793,7 +792,6 @@ Includes:
 * High Priority Candidates
 * Interview Candidates
 * Review Candidates
-* ---
 
 ## Error Handling
 
