@@ -45,6 +45,7 @@ The system aims to:
 * Schedule interviews automatically.
 * Check calendar availability before scheduling.
 * Detect calendar conflicts before scheduling interviews.
+* Find next available slot for each candidate individually when conflict is detected.
 * Send automatic conflict notification emails to affected candidates.
 * Schedule interviews at least 7 days in advance.
 * Skip weekends (Friday and Saturday) when scheduling.
@@ -79,6 +80,7 @@ The system shall:
 * Select High Priority candidates.
 * Check calendar availability before scheduling.
 * Detect and handle calendar conflicts.
+* Find next available slot for each candidate individually when conflict is detected.
 * Send conflict notification emails to affected candidates.
 * Schedule interviews at least 7 days in advance.
 * Skip Friday and Saturday when scheduling.
@@ -118,8 +120,7 @@ The system shall provide:
 * Complete workflow execution.
 * Required file validation.
 * Runtime error handling.
-* ---
-
+  ---
 ## Inputs
 
 * Candidate database (Excel)
@@ -172,6 +173,7 @@ The project is considered successful when it can:
 * Generate recruitment reports.
 * Check calendar availability before scheduling interviews.
 * Detect calendar conflicts automatically.
+* Find next available interview slot for each candidate individually.
 * Send conflict notification emails to affected candidates.
 * Schedule interviews at least 7 days in advance.
 * Skip weekends when scheduling interviews.
@@ -191,20 +193,20 @@ The completed project includes:
 
 * Recruitment Agent with Claude LLM Integration
 * Fake Mail Generator with Natural Free-Text Templates
-* Interview Scheduler with Calendar Conflict Detection
+* Interview Scheduler with Calendar Conflict Detection and Smart Slot Finding
 * Invitation Sender with Dual Excel Sync
 * Main Workflow Manager
 * Gmail Integration
 * Google Calendar Integration
 * Claude AI Integration
 * Calendar Conflict Detection
+* Smart Available Slot Finding
 * Conflict Notification Emails
 * Weekend-Aware Scheduling
 * 7-Day Advance Scheduling
 * Excel Reporting
 * Complete Project Documentation
-* ---
-
+  ---
 ## Project Status
 
 **Status:** ✅ Completed
@@ -215,6 +217,7 @@ The final solution provides a complete recruitment automation workflow from cand
 
 * Claude LLM free-text email analysis
 * Calendar conflict detection
+* Smart available slot finding per candidate
 * Automatic conflict notifications
 * Weekend-aware scheduling
 * Synchronized Excel reporting
