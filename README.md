@@ -1070,17 +1070,18 @@ The following screenshots are available in the **screenshots** folder:
 
 ---
 
-## Author
+## Authors## Authors
 
-**Lital Edni**
+Lital Edni  
+Natali Moshe
 
-Bar-Ilan University
+**Bar-Ilan University**
 
-M.Sc. Supply Chain Management
+**M.Sc. Supply Chain Management**
 
-Course: Applied Artificial Intelligence
+**Course:** Applied Artificial Intelligence
 
-2026
+**Year:** 2026
 
 ---
 
@@ -1110,4 +1111,4 @@ The project integrates Gmail, Google Calendar, Claude AI, Excel reporting, and m
 
 **End of README**
 
-© 2026 Lital Edni. All Rights Reserved.
+© 2026 Lital Edni & Natali Moshe. All Rights Reserved.
